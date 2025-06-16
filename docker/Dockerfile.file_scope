@@ -16,7 +16,7 @@ RUN npm run build
 
 # Environment variables will be injected from docker-compose
 ENV PORT=${PORT:-8001}
-ENV HOST=${HOST:-0.0.0.0}
+ENV HOST=${HOST:-127.0.0.1}
 
 # Using shell form to allow environment variable interpolation
 CMD npx -y supergateway --stdio "npm start" --port "${PORT}" --baseUrl "http://${HOST}:${PORT}" --ssePath "/sse"

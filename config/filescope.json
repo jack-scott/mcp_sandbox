@@ -1,5 +1,6 @@
 {
     "excludePatterns": [
+      "diagrams",
       "**/node_modules",
       "**/.git",
       "**/dist",
@@ -77,7 +78,7 @@
       "**/*.gradle"
     ],
     "fileWatching": {
-      "enabled": true,
+      "enabled": false,
       "debounceMs": 100,
       "ignoreDotFiles": true,
       "autoRebuildTree": true,
@@ -86,7 +87,7 @@
       "watchForDeleted": true,
       "watchForChanged": true
     },
-    "baseDirectory": "/code/",
+    "baseDirectory": "/code",
     "version": "2.6.0"
   }
   
