@@ -1,0 +1,22 @@
+# Make a stage to run the app
+FROM node:23-alpine
+# Set the working directory
+WORKDIR /server
+RUN npm install -g supergateway
+
+RUN apk add --no-cache python3 py3-pip
+RUN python3 -m venv myvenv
+ENV VIRTUAL_ENV=/myvenv
+ENV PATH="/myvenv/bin:$PATH"
+
+RUN . myvenv/bin/activate && python3 -m pip install --no-cache-dir fastmcp
+COPY servers .
+ENV PATH="/server/myvenv/bin:$PATH"
+
+ENV PORT=${PORT:-8003}
+ENV HOST=${HOST:-127.0.0.1}
+
+# Using shell form to allow environment variable interpolation
+CMD npx -y supergateway --stdio "python3 echo.py" --port "${PORT}" --baseUrl "http://${HOST}:${PORT}" --ssePath "/sse"
+
+

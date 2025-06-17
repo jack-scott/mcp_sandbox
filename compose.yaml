@@ -8,6 +8,32 @@ services:
       - DANGEROUSLY_OMIT_AUTH=true
       - CLIENT_PORT=8080
       - HOST=127.0.0.1
+  anythingllm:
+    image: mintplexlabs/anythingllm
+    container_name: anythingllm
+    ports:
+    - "3001:3001"
+    cap_add:
+      - SYS_ADMIN
+    environment:
+    # Adjust for your environment
+      - STORAGE_DIR=/app/server/storage
+      - LLM_PROVIDER=ollama
+      - OLLAMA_BASE_PATH=http://127.0.0.1:11434
+      - OLLAMA_MODEL_PREF=llama2
+      - OLLAMA_MODEL_TOKEN_LIMIT=4096
+      - EMBEDDING_ENGINE=ollama
+      - EMBEDDING_BASE_PATH=http://127.0.0.1:11434
+      - EMBEDDING_MODEL_PREF=nomic-embed-text:latest
+      - EMBEDDING_MODEL_MAX_CHUNK_LENGTH=8192
+      - VECTOR_DB=lancedb
+      - WHISPER_PROVIDER=local
+      - TTS_PROVIDER=native
+      # Add any other keys here for services or settings
+      # you can find in the docker/.env.example file
+    volumes:
+      - anythingllm_storage:/app/server/storage
+    restart: always
 
   file-scope:
     build:
@@ -35,3 +61,23 @@ services:
       - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PAT}
       - PORT=8002
       - HOST=127.0.0.1
+
+  custom-server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.custom_servers
+    ports:
+      - "8003:8003"
+    user: "1000:1000"
+    environment:
+      - PORT=8003
+      - HOST=127.0.0.1
+    # command: ["python3", "-m", "pip", "freeze"]
+
+volumes:
+  anythingllm_storage:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/jack/Documents/packages/anythingllm
